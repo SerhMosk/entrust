@@ -1,0 +1,75 @@
+{
+    "name": "serhmosk/entrust",
+    "description": "This package provides a flexible way to add Role-based Permissions to Laravel/Lumen 7-11",
+    "keywords": [
+        "laravel",
+        "lumen",
+        "illuminate",
+        "auth",
+        "roles",
+        "acl",
+        "permission"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zizaco Zizuini",
+            "email": "zizaco@gmail.com"
+        },
+        {
+            "name": "Andrew Elkins",
+            "homepage": "http://andrewelkins.com"
+        },
+        {
+            "name": "Ben Batschelet",
+            "homepage": "http://github.com/bbatsche"
+        },
+        {
+            "name": "Michele Angioni",
+            "email": "michele.angioni@gmail.com"
+        },
+        {
+            "name": "Giorgi Ghughunishvili",
+            "email": "gghughunishvili@gmail.com"
+        },
+        {
+            "name": "Serhii Moskalenko",
+            "email": "serg.mosk.dev@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "illuminate/console": "~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/support": "~7.0|^8.0|^9.0|^10.0|^11.0",
+        "illuminate/cache": "~7.0|^8.0|^9.0|^10.0|^11.0"
+    },
+    "require-dev": {
+        "illuminate/database": "~7.0|^8.0|^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^8.0|^9.0|^10.0",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "classmap": [
+            "src/commands"
+        ],
+        "psr-4": {
+            "Zizaco\\Entrust\\": "src/Entrust/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Zizaco\\Entrust\\EntrustServiceProvider"
+            ],
+            "aliases": {
+                "Entrust": "Zizaco\\Entrust\\EntrustFacade"
+            }
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/Middleware/MiddlewareTest.php"
+        ]
+    },
+    "minimum-stability": "dev"
+}
