@@ -327,7 +327,7 @@ class EntrustTest extends TestCase
         $this->assertTrueWithoutException();
     }
 
-    public function simpleFilterDataProvider()
+    public static function simpleFilterDataProvider(): array
     {
         return [
             // Filter passes, null is returned
@@ -380,7 +380,7 @@ class EntrustTest extends TestCase
         $entrust->$methodTested($route, $methodValue, $expectedResponse);
     }
 
-    public function routeNeedsRoleOrPermissionFilterDataProvider()
+    public static function routeNeedsRoleOrPermissionFilterDataProvider(): array
     {
         return [
             // Both role and permission pass, null is returned
