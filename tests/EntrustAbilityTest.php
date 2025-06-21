@@ -1,11 +1,11 @@
 <?php
 
-use Zizaco\Entrust\Middleware\EntrustPermission;
+use Zizaco\Entrust\Middleware\EntrustAbility;
 use Mockery as m;
 
-class EntrustPermissionTest extends MiddlewareTestCase
+class EntrustAbilityTest extends MiddlewareTestCase
 {
-    public function testHandle_IsGuestWithNoPermission_ShouldAbort403()
+    public function testHandle_IsGuestWithNoAbility_ShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -15,7 +15,7 @@ class EntrustPermissionTest extends MiddlewareTestCase
         $guard = m::mock('Illuminate\Contracts\Auth\Guard[guest]');
         $request = $this->mockRequest();
 
-        $middleware = new EntrustPermission($guard);
+        $middleware = new EntrustAbility($guard);
 
         /*
         |------------------------------------------------------------
@@ -23,9 +23,10 @@ class EntrustPermissionTest extends MiddlewareTestCase
         |------------------------------------------------------------
         */
         $guard->shouldReceive('guest')->andReturn(true);
-        $request->user()->shouldReceive('can')->andReturn(false);
+        $request->user()->shouldReceive('ability')->andReturn(false);
 
-        $middleware->handle($request, function () {}, null, null, true);
+        $middleware->handle($request, function () {
+        }, null, null, true);
 
         /*
         |------------------------------------------------------------
@@ -35,7 +36,7 @@ class EntrustPermissionTest extends MiddlewareTestCase
         $this->assertAbortCode(403);
     }
 
-    public function testHandle_IsGuestWithPermission_ShouldAbort403()
+    public function testHandle_IsGuestWithAbility_ShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -45,7 +46,7 @@ class EntrustPermissionTest extends MiddlewareTestCase
         $guard = m::mock('Illuminate\Contracts\Auth\Guard');
         $request = $this->mockRequest();
 
-        $middleware = new EntrustPermission($guard);
+        $middleware = new EntrustAbility($guard);
 
         /*
         |------------------------------------------------------------
@@ -53,39 +54,10 @@ class EntrustPermissionTest extends MiddlewareTestCase
         |------------------------------------------------------------
         */
         $guard->shouldReceive('guest')->andReturn(true);
-        $request->user()->shouldReceive('can')->andReturn(true);
+        $request->user()->shouldReceive('ability')->andReturn(true);
 
-        $middleware->handle($request, function () {}, null, null);
-
-        /*
-        |------------------------------------------------------------
-        | Assertion
-        |------------------------------------------------------------
-        */
-        $this->assertAbortCode(403);
-    }
-
-    public function testHandle_IsLoggedInWithNoPermission_ShouldAbort403()
-    {
-        /*
-        |------------------------------------------------------------
-        | Set
-        |------------------------------------------------------------
-        */
-        $guard = m::mock('Illuminate\Contracts\Auth\Guard');
-        $request = $this->mockRequest();
-
-        $middleware = new EntrustPermission($guard);
-
-        /*
-        |------------------------------------------------------------
-        | Expectation
-        |------------------------------------------------------------
-        */
-        $guard->shouldReceive('guest')->andReturn(false);
-        $request->user()->shouldReceive('can')->andReturn(false);
-
-        $middleware->handle($request, function () {}, null, null);
+        $middleware->handle($request, function () {
+        }, null, null);
 
         /*
         |------------------------------------------------------------
@@ -95,7 +67,7 @@ class EntrustPermissionTest extends MiddlewareTestCase
         $this->assertAbortCode(403);
     }
 
-    public function testHandle_IsLoggedInWithPermission_ShouldNotAbort()
+    public function testHandle_IsLoggedInWithNoAbility_ShouldAbort403()
     {
         /*
         |------------------------------------------------------------
@@ -105,7 +77,7 @@ class EntrustPermissionTest extends MiddlewareTestCase
         $guard = m::mock('Illuminate\Contracts\Auth\Guard');
         $request = $this->mockRequest();
 
-        $middleware = new EntrustPermission($guard);
+        $middleware = new EntrustAbility($guard);
 
         /*
         |------------------------------------------------------------
@@ -113,9 +85,41 @@ class EntrustPermissionTest extends MiddlewareTestCase
         |------------------------------------------------------------
         */
         $guard->shouldReceive('guest')->andReturn(false);
-        $request->user()->shouldReceive('can')->andReturn(true);
+        $request->user()->shouldReceive('ability')->andReturn(false);
 
-        $middleware->handle($request, function () {}, null, null);
+        $middleware->handle($request, function () {
+        }, null, null);
+
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
+        $this->assertAbortCode(403);
+    }
+
+    public function testHandle_IsLoggedInWithAbility_ShouldNotAbort()
+    {
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
+        $guard = m::mock('Illuminate\Contracts\Auth\Guard');
+        $request = $this->mockRequest();
+
+        $middleware = new EntrustAbility($guard);
+
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
+        $guard->shouldReceive('guest')->andReturn(false);
+        $request->user()->shouldReceive('ability')->andReturn(true);
+
+        $middleware->handle($request, function () {
+        }, null, null);
 
         /*
         |------------------------------------------------------------
@@ -123,5 +127,17 @@ class EntrustPermissionTest extends MiddlewareTestCase
         |------------------------------------------------------------
         */
         $this->assertDidNotAbort();
+    }
+
+    protected function mockRequest()
+    {
+        $user = m::mock('_mockedUser')->makePartial();
+
+        $request = m::mock('Illuminate\Http\Request')
+            ->shouldReceive('user')
+            ->andReturn($user)
+            ->getMock();
+
+        return $request;
     }
 }

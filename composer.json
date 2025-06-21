@@ -68,7 +68,7 @@
     },
     "autoload-dev": {
         "classmap": [
-            "tests/Middleware/MiddlewareTestCase.php"
+            "tests/MiddlewareTestCase.php"
         ]
     },
     "minimum-stability": "dev"
